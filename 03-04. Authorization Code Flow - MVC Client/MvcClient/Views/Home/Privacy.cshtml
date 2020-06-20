@@ -1,0 +1,54 @@
+﻿<p>Use this page to detail your site's privacy policy.</p>
+@using Microsoft.IdentityModel.Protocols.OpenIdConnect
+@using Microsoft.AspNetCore.Authentication
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@model string
+@{
+    ViewData["Title"] = "Privacy Policy";
+    var accessToken = await HttpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+    var idToken = await HttpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
+
+    var refreshToken = await HttpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
+    var authenticationCode = await HttpContextAccessor.HttpContext.GetTokenAsync(OpenIdConnectParameterNames.Code);
+}
+
+<h2>Api Resource</h2>
+<div>
+    <p>@Model</p>
+</div>
+
+<h2>Infos</h2>
+<dl>
+    <dt>accessToken</dt>
+    <dd>@accessToken</dd>
+
+    <dt>idToken</dt>
+    <dd>@idToken</dd>
+
+    <dt>refreshToken</dt>
+    <dd>@refreshToken</dd>
+
+    <dt>authenticationCode</dt>
+    <dd>@authenticationCode</dd>
+</dl>
+
+
+<h2>Claims</h2>
+
+<dl>
+    @foreach (var claim in User.Claims)
+    {
+        <dt>@claim.Type</dt>
+        <dd>@claim.Value</dd>
+    }
+</dl>
+
+<h2>Properties</h2>
+
+<dl>
+    @foreach (var prop in (await Context.AuthenticateAsync()).Properties.Items)
+    {
+        <dt>@prop.Key</dt>
+        <dd>@prop.Value</dd>
+    }
+</dl>
